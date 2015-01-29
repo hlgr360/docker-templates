@@ -1,0 +1,91 @@
+# Use phusion/baseimage as base image. 
+# See https://registry.hub.docker.com/u/phusion/baseimage/
+
+# To make your builds reproducible, make sure you lock down to a specific 
+# version, not to `latest`! See for a list of version numbers:
+# https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
+FROM phusion/baseimage:0.9.13
+MAINTAINER holger@launchd.de
+
+# Set correct environment variables.
+ENV DEBIAN_FRONTEND noninteractive
+ENV HOME /root
+
+# Regenerate SSH host keys. baseimage-docker does not contain any, so you
+# have to do that yourself. You may also comment out this instruction; the
+# init system will auto-generate one during boot.
+RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
+
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
+
+# get the latest repos
+RUN apt-get update
+
+
+##### ...put your own build instructions here...
+
+#
+# ruby rails
+#
+
+# Install ruby rails dependencies 
+RUN apt-get update -qq && apt-get install -y libpq-dev curl git # zlib1g-dev libreadline-dev libssl-dev libcurl4-openssl-dev
+
+# install Ruby 1.9.3
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+RUN curl -L get.rvm.io | bash -s stable
+RUN echo "source ~/.rvm/scripts/rvm" >> ~/.bashrc
+RUN bash -l -c "rvm autolibs enable"
+RUN bash -l -c "rvm requirements"
+RUN bash -l -c "rvm install 1.9.3"
+
+# Never install rubygem docs
+RUN echo "gem: --no-rdoc --no-ri" >> ~/.gemrc
+
+# Install bundler
+RUN bash -l -c "gem install bundler"
+
+# Install node.js 
+RUN add-apt-repository -y ppa:chris-lea/node.js
+RUN apt-get update
+RUN apt-get install -y nodejs
+
+# Preinstall majority of gems
+WORKDIR /tmp 
+ADD ./Gemfile Gemfile
+ADD ./Gemfile.lock Gemfile.lock
+RUN bash -l -c "bundle install"
+
+# Rails app
+ADD rails/start-server.sh /start-server.sh
+RUN chmod +x /start-server.sh
+
+# create app directory
+RUN mkdir /app
+WORKDIR /app 
+
+ENV RAILS_ENV development
+
+# Add the PostgreSQL PGP key to verify their Debian packages.
+# It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+
+# Add PostgreSQL's repository. It contains the most recent stable release of PostgreSQL, ``9.3``.
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+# Install PostgreSQL 9.3 client 
+RUN apt-get install -y postgresql-client-9.3 git
+
+# Install Heroku tools 
+RUN apt-get install -y wget
+RUN wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+
+##### ... end of the build instructions ...
+
+
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+EXPOSE 3000
+CMD ["/start-server.sh"]
