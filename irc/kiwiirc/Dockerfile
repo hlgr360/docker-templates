@@ -24,8 +24,31 @@ RUN apt-get update
 
 ##### ...put your own build instructions here...
 
+# add node.js
+# https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#debian-and-ubuntu-based-linux-distributions
 RUN curl -sL https://deb.nodesource.com/setup | bash -
 RUN apt-get install -y nodejs
+
+
+# add kiwiIRC
+RUN apt-get install -y gnutls-bin git
+
+RUN mkdir /app
+WORKDIR /app
+
+# https://github.com/prawnsalad/KiwiIRC
+RUN git clone https://github.com/prawnsalad/KiwiIRC.git
+
+WORKDIR /app/KiwiIRC
+RUN npm install
+add config.js /app/KiwiIRC/config.js
+RUN ./kiwi build
+
+# generate the self-signed cert for SSL
+# https://help.ubuntu.com/community/GnuTLS
+add sslcert.template /app/KiwiIRC/sslcert.template
+RUN certtool --generate-privkey --outfile server-key.pem
+RUN certtool --generate-self-signed --load-privkey server-key.pem --template sslcert.template --outfile server-cert.pem
 
 add start-server.sh /start-server.sh
 

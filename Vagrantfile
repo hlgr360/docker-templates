@@ -13,11 +13,15 @@ $setup = <<SCRIPT
 #docker pull launchd/rails
 #docker pull launchd/phppgadmin
 #docker pull launchd/ngircd
+#docker pull launchd/kiwiirc
 
-# Run the containers
+# run Postgress
 #docker run -d --name postgres launchd/postgres
 #docker run -d --name phppgadmin --link postgres:db -p 80:80 launchd/phppgadmin
+
+# run IRC
 #docker run -d --name ngircd -p 6667:6667 -p 6697:6697 launchd/ngircd
+#docker run -d --name kiwiirc --link ngircd:irc  -p 7778:7778 launchd/kiwiirc
 
 #docker run -d --name rails --link postgres:db -v /app:/app -p 3000:3000 launchd/rails
 # to run the rails container with an interactive shell, use the following instead
@@ -33,6 +37,7 @@ $start = <<SCRIPT
 #docker start rails
 #docker start phppgadmin
 #docker start ngircd
+#docker start kiwiirc
 
 SCRIPT
 
@@ -143,6 +148,9 @@ Vagrant.configure("2") do |config|
 
       # [ngircd] Port Forwarding (only SSL)
       config.vm.network "forwarded_port", guest: 6697, host: 6697
+
+      # [kiwiirc] Port Forwarding (only SSL)
+      config.vm.network "forwarded_port", guest: 7778, host: 7778
 
       # Setup the containers when the VM is first created
       config.vm.provision "shell", inline: $setup

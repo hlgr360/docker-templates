@@ -32,6 +32,7 @@ add ngircd.conf /etc/ngircd/ngircd.conf
 add ngircd.motd /etc/ngircd/ngircd.motd
 
 # generate the self-signed cert for SSL
+# https://help.ubuntu.com/community/GnuTLS
 WORKDIR /etc/ngircd/
 add sslcert.template /etc/ngircd/sslcert.template
 RUN certtool --generate-privkey --outfile server-key.pem
