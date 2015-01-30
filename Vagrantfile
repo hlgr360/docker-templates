@@ -141,8 +141,7 @@ Vagrant.configure("2") do |config|
       # [phppgadmin] Port Forwarding
       config.vm.network "forwarded_port", guest: 80, host: 3001
 
-      # [ngircd] Port Forwarding
-      config.vm.network "forwarded_port", guest: 6667, host: 6667
+      # [ngircd] Port Forwarding (only SSL)
       config.vm.network "forwarded_port", guest: 6697, host: 6697
 
       # Setup the containers when the VM is first created
