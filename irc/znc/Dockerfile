@@ -24,32 +24,32 @@ RUN apt-get update
 
 ##### ...put your own build instructions here...
 
-# add node.js
-# https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#debian-and-ubuntu-based-linux-distributions
-RUN curl -sL https://deb.nodesource.com/setup | bash -
-RUN apt-get install -y nodejs
+# See http://wiki.znc.in/ZNC and https://github.com/znc/znc
 
+# https://noswap.com/articles/irc
+# https://shellfish.io/tutorial/1/how-to-install-znc-on-debian-7/
 
-# add kiwiIRC
-RUN apt-get install -y gnutls-bin git
+# install dependencies
+RUN apt-get install -y software-properties-common
 
-RUN mkdir /app
-WORKDIR /app
+# Install znc
+RUN add-apt-repository -y ppa:teward/znc
+RUN apt-get update
+RUN apt-get install -y znc znc-dbg znc-dev znc-perl znc-python znc-tcl
 
-# https://github.com/prawnsalad/KiwiIRC
-RUN git clone https://github.com/prawnsalad/KiwiIRC.git
+# add znc user
+RUN useradd -m -s /bin/bash -d /var/lib/znc znc
 
-WORKDIR /app/KiwiIRC
-RUN npm install
-add config.js /app/KiwiIRC/config.js
-RUN ./kiwi build
+# add configuration
+USER znc
+WORKDIR /var/lib/znc
+RUN mkdir /var/lib/znc/configs
+ADD znc.conf /var/lib/znc/configs/znc.conf
+RUN znc -d /var/lib/znc --makepem
 
-# generate the self-signed cert for SSL
-# https://help.ubuntu.com/community/GnuTLS
-add sslcert.template /app/KiwiIRC/sslcert.template
-RUN certtool --generate-privkey --outfile server-key.pem
-RUN certtool --generate-self-signed --load-privkey server-key.pem --template sslcert.template --outfile server-cert.pem
-
+USER root
+# ADD does not care about USER
+RUN chown znc /var/lib/znc/configs/znc.conf
 add start-server.sh /start-server.sh
 
 
@@ -59,7 +59,7 @@ add start-server.sh /start-server.sh
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # expose KiwiIRC client port
-EXPOSE :7778
+EXPOSE :6697
 
 # if you execute "docker run" without arguments, run kiwiirc on foreground
 CMD ["/start-server.sh"]

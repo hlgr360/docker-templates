@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/sh
 
 docker stop ngircd || true
 docker rm ngircd || true

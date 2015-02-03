@@ -49,7 +49,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # expose IRC ports
 EXPOSE :6667
-EXPOSE :6697
+# exposed by IRC bouncer instead
+#EXPOSE :6697
 
 # if you execute "docker run" without arguments, run ngircd on foreground
 CMD ["/start-server.sh"]

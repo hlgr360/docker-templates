@@ -214,9 +214,9 @@ conf.client_themes = [
 // If set, the client may only connect to this 1 IRC server
 // https://docs.docker.com/userguide/dockerlinks/
 // http://stackoverflow.com/questions/8332333/node-js-setting-up-environment-specific-configs-to-be-used-with-everyauth
-conf.restrict_server = process.env.IRC_PORT_6667_TCP_ADDR;
-conf.restrict_server_port = process.env.IRC_PORT_6667_TCP_PORT;
-conf.restrict_server_ssl = false;
+conf.restrict_server = process.env.IRC_PORT_6697_TCP_ADDR;
+conf.restrict_server_port = process.env.IRC_PORT_6697_TCP_PORT;
+conf.restrict_server_ssl = true;
 conf.restrict_server_channel = "#general";
 //conf.restrict_server_channel_key = "";
 //conf.restrict_server_password = "";

@@ -30,7 +30,7 @@ RUN apt-get update
 #
 
 # Install ruby rails dependencies 
-RUN apt-get update -qq && apt-get install -y libpq-dev curl git # zlib1g-dev libreadline-dev libssl-dev libcurl4-openssl-dev
+RUN apt-get update -qq && apt-get install -y libpq-dev curl git 
 
 # install Ruby 1.9.3
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3

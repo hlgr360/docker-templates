@@ -1,5 +1,4 @@
-#!/bin/bash
-set -e
+#!/bin/sh
 
 docker stop kiwiirc || true
 docker rm kiwiirc || true
