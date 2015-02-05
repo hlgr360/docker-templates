@@ -4,8 +4,8 @@ This docker template provides the 'kiwiirc' IRC Web Client on port 7778 (https).
 
 ## Dependendy
 ### Upstream
-'ngircd'
-'znc'
+`ngircd`
+`znc`
 
 ## (Re)Building the image
 `./image-rebuild.sh <userid>`

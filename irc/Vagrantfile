@@ -1,0 +1,61 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.require_version ">= 1.6.3"
+
+# See https://vagrantcloud.com/yungsang/boxes/boot2docker
+# See http://blog.zenika.com/index.php?post/2014/10/07/Setting-up-a-development-environment-using-Docker-and-Vagrant
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "boot2docker"
+  config.vm.box = "yungsang/boot2docker"
+
+  #config.vm.synced_folder ".", "/app"
+
+  # Or you can use NFS as before
+  # config.vm.network "private_network", ip: "192.168.33.10"
+  # config.vm.synced_folder ".", "/app", type: "nfs"
+
+  # Uncomment below to use more than one instance at once
+  #config.vm.network :forwarded_port, guest: 2375, host: 2375, auto_correct: true
+
+  # Fix busybox/udhcpc issue
+  config.vm.provision :shell do |s|
+    s.inline = <<-EOT
+      if ! grep -qs ^nameserver /etc/resolv.conf; then
+        sudo /sbin/udhcpc
+      fi
+      cat /etc/resolv.conf
+    EOT
+  end
+
+  # Adjust datetime after suspend and resume
+  config.vm.provision :shell do |s|
+    s.inline = <<-EOT
+      sudo /usr/local/bin/ntpclient -s -h pool.ntp.org
+      date
+    EOT
+  end
+
+  config.vm.provision :docker do |d|
+    d.pull_images "hlgr360/ngircd", "hlgr360/znc", "hlgr360/kiwiirc"
+
+    d.run "ngircd",
+      image: "hlgr360/ngircd",
+      args: "-p 6667:6667"
+
+    d.run "znc",
+      image: "hlgr360/znc",
+      args: "--link ngircd:irc -p 6697:6697"
+
+    d.run "kiwiirc",
+      image: "hlgr360/kiwiirc",
+      args: "--link znc:irc  -p 7778:7778"
+  end
+      
+  # [znc] Port Forwarding (only SSL)
+  config.vm.network "forwarded_port", guest: 6697, host: 6697
+
+  # [kiwiirc] Port Forwarding (only SSL)
+  config.vm.network "forwarded_port", guest: 7778, host: 7778
+
+end

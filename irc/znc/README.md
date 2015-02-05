@@ -4,9 +4,9 @@ This docker template provides the 'znc' IRC Bouncer on port 6697 (SSL). Both ext
 
 ## Dependencies
 ### Upstream
-'ngircd'
+`ngircd`
 ### Downstream
-'kiwiirc'
+`kiwiirc`
 
 ## (Re)Building the image
 `./image-rebuild.sh <userid>`
@@ -20,3 +20,6 @@ username password: `zncuser` `zncuser`
 
 ## Configuring clients
 Textual (MacOS): http://www.codeux.com/textual/help/Connecting-to-ZNC-Bouncer.kb
+Server password: `zncuser`
+User identity: `zncuser/irc.localdomain`
+
