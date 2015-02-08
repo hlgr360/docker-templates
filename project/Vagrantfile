@@ -36,27 +36,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     EOT
   end
 
-  # config.vm.provision :docker do |d|
-  #  d.pull_images "yungsang/busybox"
-  #  d.run "simple-echo",
-  #    image: "yungsang/busybox",
-  #    args: "-p 8080:8080",
-  #    cmd: "nc -p 8080 -l -l -e echo hello world!"
-  # end
+  # See https://github.com/ianmiell/shutit/tree/master/library/taigaio
+  # and https://registry.hub.docker.com/u/imiell/taigaio/
+  config.vm.provision :docker do |d|
+    d.pull_images "imiell/taigaio"
+
+    d.run "taigaio",
+      image: "imiell/taigaio",
+      args: "-it -p 8000:8000"
+      cmd: "/root/start_postgres.sh && /root/start_taiga.sh && echo READY! && sleep infinity"
       
-  # [ngircd] Port Forwarding (only SSL)
-  config.vm.network "forwarded_port", guest: 6697, host: 6697
-
-  # [kiwiirc] Port Forwarding (only SSL)
-  config.vm.network "forwarded_port", guest: 7778, host: 7778
-
-  # [rails] Port Forwarding
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
-
-  # [phppgadmin] Port Forwarding
-  config.vm.network "forwarded_port", guest: 80, host: 3001
-
-  # [taiga] Port Forwarding
+  end
+      
+  #
   config.vm.network "forwarded_port", guest: 8000, host: 8000
 
 end

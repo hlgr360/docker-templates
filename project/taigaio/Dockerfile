@@ -25,21 +25,25 @@ RUN apt-get update
 ##### ...put your own build instructions here...
 
 
-RUN apt-get install -y gnutls-bin ngircd
+# Install shutit
+# See https://github.com/ianmiell/shutit/blob/master/INSTALL.md
+RUN apt-get install -y -qq curl git python-pip
+WORKDIR /opt
+RUN git clone https://github.com/ianmiell/shutit.git
+WORKDIR /opt/shutit
+RUN pip install -r requirements.txt
 
-add start-server.sh /start-server.sh
-add ngircd.conf /etc/ngircd/ngircd.conf
-add ngircd.motd /etc/ngircd/ngircd.motd
+# Build taiga.io
+# See https://github.com/taigaio/taiga-scripts/issues/3
+# and https://zwischenzugs.wordpress.com/2014/10/07/using-shutit-to-build-your-own-taiga-server/
+WORKDIR /opt/shutit/library/taigaio/bin
+# RUN /opt/shutit/shutit build --shutit_module_path /opt/shutit/library --delivery bash --debug
 
-# generate the self-signed cert for SSL
-# https://help.ubuntu.com/community/GnuTLS
-WORKDIR /etc/ngircd/
-add sslcert.template /etc/ngircd/sslcert.template
-RUN certtool --generate-privkey --outfile server-key.pem
-RUN certtool --generate-self-signed --load-privkey server-key.pem --template sslcert.template --outfile server-cert.pem
-RUN certtool --generate-dh-params > dhparams.pem
+# add start-server.sh /start-server.sh
 
-RUN mkdir /app
+export PATH=$PATH:/opt/shutit
+export SHUTIT=/opt/shutit/shutit
+chmod 0600 configs/build.cnf
 
 
 ##### ... end of the build instructions ...
@@ -47,11 +51,8 @@ RUN mkdir /app
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# expose IRC ports
-EXPOSE 6667
-# exposed by IRC bouncer instead
-#EXPOSE 6697
+# expose Taiga.io client port
+EXPOSE 8000
 
-# if you execute "docker run" without arguments, run ngircd on foreground
+# if you execute "docker run" without arguments, run kiwiirc on foreground
 CMD ["/start-server.sh"]
-

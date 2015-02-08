@@ -24,6 +24,7 @@ RUN apt-get update
 
 ##### ...put your own build instructions here...
 
+
 # See http://wiki.znc.in/ZNC and https://github.com/znc/znc
 
 # https://noswap.com/articles/irc
@@ -59,7 +60,7 @@ add start-server.sh /start-server.sh
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # expose KiwiIRC client port
-EXPOSE :6697
+EXPOSE 6697
 
 # if you execute "docker run" without arguments, run kiwiirc on foreground
 CMD ["/start-server.sh"]
