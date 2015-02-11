@@ -24,11 +24,11 @@ RUN apt-get update
 
 ##### ...put your own build instructions here...
 
+
 # add node.js
 # https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#debian-and-ubuntu-based-linux-distributions
 RUN curl -sL https://deb.nodesource.com/setup | bash -
 RUN apt-get install -y nodejs
-
 
 # add kiwiIRC
 RUN apt-get install -y gnutls-bin git

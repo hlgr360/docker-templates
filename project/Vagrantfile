@@ -43,9 +43,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     d.run "taigaio",
       image: "imiell/taigaio",
-      args: "-it -p 8000:8000"
+      args: "-it -p 8000:8000",
       cmd: "/root/start_postgres.sh && /root/start_taiga.sh && echo READY! && sleep infinity"
-      
+
   end
       
   #

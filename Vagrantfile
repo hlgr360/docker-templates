@@ -1,6 +1,9 @@
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.require_version ">= 1.6.3"
 
+$vb_memory = 1024
+$vb_cpus = 1
+
 # See https://vagrantcloud.com/yungsang/boxes/boot2docker
 # See http://blog.zenika.com/index.php?post/2014/10/07/Setting-up-a-development-environment-using-Docker-and-Vagrant
 
@@ -8,6 +11,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "boot2docker"
   config.vm.box = "yungsang/boot2docker"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.memory = $vb_memory
+    vb.cpus = $vb_cpus
+  end
 
   config.vm.synced_folder ".", "/app"
 
@@ -50,7 +58,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # [kiwiirc] Port Forwarding (only SSL)
   config.vm.network "forwarded_port", guest: 7778, host: 7778
 
-  # [rails] Port Forwarding
+  # [rails][telescope] Port Forwarding
   config.vm.network "forwarded_port", guest: 3000, host: 3000
 
   # [phppgadmin] Port Forwarding
