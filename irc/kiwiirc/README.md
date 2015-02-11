@@ -2,13 +2,16 @@
 
 This docker template provides the 'kiwiirc' IRC Web Client on port 7778 (https). It is configured to connect to the IRC bouncer 'znc' image on port 6697.
 
+## Website
+https://kiwiirc.com
+
 ## Dependendy
 ### Upstream
 `ngircd`
 `znc`
 
 ## (Re)Building the image
-`./image-rebuild.sh <userid>`
+`./build.sh <userid>`
 
 ## Running the image
 `docker run -d --name kiwiirc --link znc:irc  -p 7778:7778 <userid>/kiwiirc`

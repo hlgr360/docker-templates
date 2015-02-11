@@ -2,6 +2,9 @@
 
 This docker template provides the 'znc' IRC Bouncer on port 6697 (SSL). Both external IRC clients as well as the linked web client 'kiwiirc' will connect to it. It is configured to connect to the 'ngircd' container on port 6667. The corresponding network alias is 'irc.localdomain'
 
+## Website
+http://wiki.znc.in/ZNC
+
 ## Dependencies
 ### Upstream
 `ngircd`
@@ -9,7 +12,7 @@ This docker template provides the 'znc' IRC Bouncer on port 6697 (SSL). Both ext
 `kiwiirc`
 
 ## (Re)Building the image
-`./image-rebuild.sh <userid>`
+`./build.sh <userid>`
 
 ## Running the image
 `docker run -d --name znc --link ngircd:irc -p 6697:6697 <userid>/znc`
