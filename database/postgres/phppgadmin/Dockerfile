@@ -44,7 +44,7 @@ ADD config.inc.php /etc/phppgadmin/config.inc.php
 ADD phppgadmin /etc/apache2/conf-available/phppgadmin.conf
 RUN a2enconf phppgadmin
 
-# emnable passing of environment variables into php
+# enable passing of environment variables into php
 RUN sed -i 's/variables_order = "GPCS"/variables_order = "EGPCS"/g' /etc/php5/apache2/php.ini 
 
 # Set Apache environment variables

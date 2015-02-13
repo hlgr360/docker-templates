@@ -36,19 +36,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     EOT
   end
 
-  # See https://github.com/ianmiell/shutit/tree/master/library/taigaio
-  # and https://registry.hub.docker.com/u/imiell/taigaio/
+  # See https://github.com/fguillot/kanboard
   config.vm.provision :docker do |d|
-    d.pull_images "imiell/taigaio"
+    d.pull_images "hlgr360/canboard"
 
-    d.run "taigaio",
-      image: "imiell/taigaio",
-      args: "-it -p 8000:8000",
-      cmd: "/root/start_postgres.sh && /root/start_taiga.sh && echo READY! && sleep infinity"
+    d.run "canboard",
+      image: "hlgr360/canboard",
+      args: "-p 80:80"
 
   end
       
-  #
-  config.vm.network "forwarded_port", guest: 8000, host: 8000
+  # forward port for kanboard UI
+  config.vm.network "forwarded_port", guest: 80, host: 8000
 
 end

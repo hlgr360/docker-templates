@@ -25,25 +25,28 @@ RUN apt-get update
 ##### ...put your own build instructions here...
 
 
-# Install shutit
-# See https://github.com/ianmiell/shutit/blob/master/INSTALL.md
-RUN apt-get install -y -qq curl git python-pip
-WORKDIR /opt
-RUN git clone https://github.com/ianmiell/shutit.git
-WORKDIR /opt/shutit
-RUN pip install -r requirements.txt
+# From https://github.com/fguillot/kanboard/blob/master/Dockerfile
+RUN apt-get install -y apache2 php5 php5-sqlite git curl
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Build taiga.io
-# See https://github.com/taigaio/taiga-scripts/issues/3
-# and https://zwischenzugs.wordpress.com/2014/10/07/using-shutit-to-build-your-own-taiga-server/
-WORKDIR /opt/shutit/library/taigaio/bin
-# RUN /opt/shutit/shutit build --shutit_module_path /opt/shutit/library --delivery bash --debug
+# install php comper for dependency management
+RUN curl -sS https://getcomposer.org/installer | php -- --filename=/usr/local/bin/composer
+
+# clone kanboard repo
+RUN cd /var/www && git clone https://github.com/fguillot/kanboard.git
+RUN cd /var/www/kanboard && composer install
+RUN rm -rf /var/www/html && mv /var/www/kanboard /var/www/html
+RUN chown -R www-data:www-data /var/www/html/data
+
+# Set Apache environment variables
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
 
 # add start-server.sh /start-server.sh
-
-export PATH=$PATH:/opt/shutit
-export SHUTIT=/opt/shutit/shutit
-chmod 0600 configs/build.cnf
+ADD start-server.sh /start-server.sh
 
 
 ##### ... end of the build instructions ...
@@ -51,7 +54,7 @@ chmod 0600 configs/build.cnf
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# expose Taiga.io client port
+# expose kanboard client port
 EXPOSE 8000
 
 # if you execute "docker run" without arguments, run kiwiirc on foreground
