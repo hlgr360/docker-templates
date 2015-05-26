@@ -20,6 +20,7 @@ swagger-editor:
     > cd /app/swagger-editor
     > ./node_modules/grunt-cli/bin/grunt serve:dist
     Connect to http://127.0.0.1:8080
+    
 swagger-ui: 
     > su nodejs
     > cd /app/swagger-ui
