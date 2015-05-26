@@ -43,12 +43,13 @@ RUN npm install
 # http://serverfault.com/questions/548537/cant-get-bower-working-bower-esudo-cannot-be-run-with-sudo
 # https://github.com/slushjs/slush-angular/issues/14
 RUN node_modules/bower/bin/bower install --config.interactive=false
-RUN node_modules/grunt/bin/grunt build
+RUN node_modules/grunt-cli/bin/grunt build
 
 # run the app on start
-USER root
+WORKDIR /app
 #ADD start-server.sh /start-server.sh
 
+USER root
 
 ##### ... end of the build instructions ...
 
