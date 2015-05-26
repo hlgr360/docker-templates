@@ -17,7 +17,7 @@ http://www.swagger.io
 ## Accessing Swagger tooling
 swagger-editor: 
     > cd /app/swagger-editor
-    > npm start
+    > ./node_modules/grunt-cli/bin/grunt serve
     Connect to http://127.0.0.1:8080
 swagger-ui: 
     > cd /app/swagger-ui
