@@ -61,6 +61,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # [rails][telescope] Port Forwarding
   config.vm.network "forwarded_port", guest: 3000, host: 3000
 
+  # [swagger-editor, swagger-ui] Port Forwarding
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+
   # [phppgadmin][kanboard] Port Forwarding
   config.vm.network "forwarded_port", guest: 80, host: 3001
 
