@@ -16,11 +16,11 @@ http://www.swagger.io
 
 ## Accessing Swagger tooling
 swagger-editor: 
-    > su nodejs
+    '> su nodejs
     > cd /app/swagger-editor
-    > ./node_modules/grunt-cli/bin/grunt serve:dist
+    > ./node_modules/grunt-cli/bin/grunt serve:dist'
     Connect to http://127.0.0.1:8080
-    
+
 swagger-ui: 
     > su nodejs
     > cd /app/swagger-ui
