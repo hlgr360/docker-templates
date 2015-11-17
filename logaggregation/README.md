@@ -31,6 +31,8 @@ https://github.com/tagomoris/fluent-plugin-secure-forward#using-private-ca-file-
 
 * Change credentials for authentication in config file. Authentication can also be disabled by setting `authentication` to `false` or `no`
 
+* __Very important!__: This sample allows you to filter out unwanted messages via the `<match **>` tag at the bottom that uses the `rewrite-tag-filter` to determine what log messages go through and what messages are thrown away. In this example it looks in the `sourceProject` field and if it contains a specific value then it is re-tagged with the `internal` prefix and re-emitted internally. All messages with `internal` as the tag prefix are automatically caught by the `<match internal.**>` tag and sent to elasticsearch. Feel free to remove or modify this mechanism.
+
 ### Beware of default values
  Be aware that each plugin used has default values for certain configurable parameters and to avoid unwanted behavior or to tweak the system optimally you should refer to the github pages of the individual plugin.
 
