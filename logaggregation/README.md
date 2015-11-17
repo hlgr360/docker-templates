@@ -31,6 +31,18 @@ https://github.com/tagomoris/fluent-plugin-secure-forward#using-private-ca-file-
 
 * Change credentials for authentication in config file. Authentication can also be disabled by setting `authentication` to `false` or `no`
 
+### Beware of default values
+ Be aware that each plugin used has default values for certain configurable parameters and to avoid unwanted behavior or to tweak the system optimally you should refer to the github pages of the individual plugin.
+
+ A good example is the elasticsearch plugin that by default has buffering enabled with a flush_interval of 60sec so if you were wondering why your log messages are popping up in elasticsearch with a delay...
+
+So be sure to RTM:
+ - [fluent-plugin-elasticsearch](https://github.com/uken/fluent-plugin-elasticsearch)
+ - [fluent-plugin-secure-forward](https://github.com/tagomoris/fluent-plugin-secure-forward)
+ - [fluent-plugin-rewrite-tag-filter](https://github.com/fluent/fluent-plugin-rewrite-tag-filter)
+
+
+
 ### 3. Start it up :v:
 
 Run `docker-compose up` in `/ELK/` and once finished you can access Kibana on [http://localhost:80](http://localhost:80) and login with the credentials you created in the setup phase.

@@ -21,6 +21,7 @@ Steps to set up the shipper:
 3. Modify the `/config/td-agent-shipper.conf` file according to the needs of the log source to be monitored.
   *  By default the shipper is monitoring a log file called file.log that is found on the mountable volume `/fluentd/log/` and are issued with the tag set via `FLUENTD_TAIL_TAG`
   * To make sure that it would work straight out of the box there is a `<match default.**>` that rewrites the tags of log messages to tags that would be matched by the sample provided filter and output match tag. Feel free to change the tags and overall message pipeline as needed.
+  * Be sure to also read up on the documentation for each filter to know the default values for certain parameters so that you can avoid unwanted behavior - [default values](../README.md#beware-of-default-values)
 
 Build locally with `docker build --tag=<name_your_shipper> .` in the FluentDShipper folder.
 
