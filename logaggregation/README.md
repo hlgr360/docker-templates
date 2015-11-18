@@ -31,6 +31,20 @@ https://github.com/tagomoris/fluent-plugin-secure-forward#using-private-ca-file-
 
 * Change credentials for authentication in config file. Authentication can also be disabled by setting `authentication` to `false` or `no`
 
+* __Very important!__: This sample allows you to filter out unwanted messages via the `<match **>` tag at the bottom that uses the `rewrite-tag-filter` to determine what log messages go through and what messages are thrown away. In this example it looks in the `sourceProject` field and if it contains a specific value then it is re-tagged with the `internal` prefix and re-emitted internally. All messages with `internal` as the tag prefix are automatically caught by the `<match internal.**>` tag and sent to elasticsearch. Feel free to remove or modify this mechanism.
+
+### Beware of default values
+ Be aware that each plugin used has default values for certain configurable parameters and to avoid unwanted behavior or to tweak the system optimally you should refer to the github pages of the individual plugin.
+
+ A good example is the elasticsearch plugin that by default has buffering enabled with a flush_interval of 60sec so if you were wondering why your log messages are popping up in elasticsearch with a delay...
+
+So be sure to RTM:
+ - [fluent-plugin-elasticsearch](https://github.com/uken/fluent-plugin-elasticsearch)
+ - [fluent-plugin-secure-forward](https://github.com/tagomoris/fluent-plugin-secure-forward)
+ - [fluent-plugin-rewrite-tag-filter](https://github.com/fluent/fluent-plugin-rewrite-tag-filter)
+
+
+
 ### 3. Start it up :v:
 
 Run `docker-compose up` in `/ELK/` and once finished you can access Kibana on [http://localhost:80](http://localhost:80) and login with the credentials you created in the setup phase.

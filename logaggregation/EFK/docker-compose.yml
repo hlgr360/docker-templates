@@ -6,8 +6,8 @@ elasticsearch:
     - "9300"
 fluentd:
   build: ./fluentd
-  environment:
-    - FLUENTD_CONF=td-agent-aggregator.conf
+  env_file:
+    - ./fluentd/fluentd.properties
   volumes:
     - ./fluentd/config:/fluentd/etc
     - ./fluentd/certs:/fluentd/certs
