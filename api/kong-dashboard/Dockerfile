@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+MAINTAINER: martin.danielsson@haufe-lexware.com
 
 # Install node.js
 RUN apt-get update \
@@ -11,6 +12,9 @@ RUN git clone https://github.com/PGBI/kong-dashboard.git
 
 # Configure npm
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
+# For Haufe users: In order to make npm use our proxy server, uncomment this:
+
 # RUN npm config set registry http://registry.npmjs.org/ --global
 # RUN npm config set proxy http://10.12.1.236:8083 --global
 # RUN npm config set https-proxy https://10.12.1.236:8083 --global
