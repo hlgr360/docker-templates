@@ -1,0 +1,33 @@
+elasticsearch:
+  image: elasticsearch:latest
+  command: elasticsearch -Des.network.host=0.0.0.0
+  expose:
+    - "9200"
+    - "9300"
+fluentd:
+  build: ./fluentd
+  env_file:
+    - ./fluentd/fluentd.properties
+  volumes:
+    - ./fluentd/config:/fluentd/etc
+    - ./fluentd/certs:/fluentd/certs
+  ports:
+    - "443:24284"
+  links:
+    - elasticsearch
+kibana:
+  image: kibana:latest
+  hostname: kibana
+  expose:
+    - "5601"
+  links:
+    - elasticsearch
+nginx:
+  build: ./nginx
+  hostname: nginx
+  ports:
+    - "80:80"
+  links:
+    - kibana
+  restart:
+      always
